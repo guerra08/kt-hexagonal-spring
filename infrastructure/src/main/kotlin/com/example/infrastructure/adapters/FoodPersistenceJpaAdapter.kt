@@ -17,9 +17,8 @@ class FoodPersistenceJpaAdapter(
 ) : FoodPersistencePort {
 
     override fun createFood(createFoodDto: CreateFoodDto): FoodDto {
-        var food = Food.fromCreateFoodDto(createFoodDto)
-        food = foodJpaRepository.save(food)
-        return food.toFoodDto()
+        val food = Food.fromCreateFoodDto(createFoodDto)
+        return foodJpaRepository.save(food).toFoodDto()
     }
 
     override fun getFoods() =

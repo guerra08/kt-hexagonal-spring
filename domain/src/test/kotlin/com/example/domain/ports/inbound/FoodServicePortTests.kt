@@ -4,6 +4,7 @@ import com.example.domain.data.CreateFoodDto
 import com.example.domain.data.FoodDto
 import com.example.domain.ports.outbound.FoodPersistencePort
 import com.example.domain.services.FoodService
+import io.github.serpro69.kfaker.Faker
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -11,22 +12,27 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
+import kotlin.collections.List
 
 @ExtendWith(MockKExtension::class)
+@DisplayName("[FoodServicePort Tests]")
 class FoodServicePortTests(
         @MockK val foodPersistencePort: FoodPersistencePort
 ) {
+
+    private val faker: Faker = Faker()
 
     @InjectMockKs
     var foodServicePort = FoodService(foodPersistencePort)
 
     @Test
     fun `should create a new food and return it as a FoodDto`() {
-        val createFoodDto = CreateFoodDto("Pizza", 1000)
-        val fixture = FoodDto(UUID.randomUUID(), createFoodDto.name, createFoodDto.calories)
+        val createFoodDto = faker.randomProvider.randomClassInstance<CreateFoodDto>()
+        val fixture = faker.randomProvider.randomClassInstance<FoodDto>()
         every { foodPersistencePort.createFood(createFoodDto) } returns fixture
 
         val result = foodServicePort.createFood(createFoodDto)
@@ -40,10 +46,7 @@ class FoodServicePortTests(
 
     @Test
     fun `should get all registered foods mapped to FoodDto`() {
-        val foodDtoFixture = listOf(
-                FoodDto(id = UUID.randomUUID(), name = "Pizza", calories = 1000),
-                FoodDto(id = UUID.randomUUID(), name = "Sushi", calories = 200)
-        )
+        val foodDtoFixture = List(2) { faker.randomProvider.randomClassInstance<FoodDto>() }
         every { foodPersistencePort.getFoods() } returns foodDtoFixture
 
         val result = foodServicePort.getFoods()
@@ -55,7 +58,7 @@ class FoodServicePortTests(
 
     @Test
     fun `should get a food by uuid mapped to FoodDto`() {
-        val foodDtoFixture = FoodDto(id = UUID.randomUUID(), name = "Sushi", calories = 200)
+        val foodDtoFixture = faker.randomProvider.randomClassInstance<FoodDto>()
         every { foodPersistencePort.getFood(foodDtoFixture.id.toString()) } returns foodDtoFixture
 
         val result = foodServicePort.getFood(foodDtoFixture.id.toString())

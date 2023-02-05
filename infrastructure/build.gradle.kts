@@ -39,6 +39,7 @@ dependencies {
     implementation(project(mapOf("path" to ":domain")))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("io.github.serpro69:kotlin-faker:1.13.0")
 }
 
 tasks.test {
