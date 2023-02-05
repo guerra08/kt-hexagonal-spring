@@ -38,4 +38,9 @@ dependencies {
     implementation("com.h2database:h2:2.1.214")
     implementation(project(mapOf("path" to ":domain")))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.mockk:mockk:1.13.4")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
