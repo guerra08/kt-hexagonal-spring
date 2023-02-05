@@ -53,4 +53,14 @@ class FoodServicePortTests(
         verify(exactly = 1) { foodPersistencePort.getFoods() }
     }
 
+    @Test
+    fun `should get a food by uuid mapped to FoodDto`() {
+        val foodDtoFixture = FoodDto(id = UUID.randomUUID(), name = "Sushi", calories = 200)
+        every { foodPersistencePort.getFood(foodDtoFixture.id.toString()) } returns foodDtoFixture
+
+        val result = foodServicePort.getFood(foodDtoFixture.id.toString())
+
+        assertEquals(foodDtoFixture, result)
+    }
+
 }
