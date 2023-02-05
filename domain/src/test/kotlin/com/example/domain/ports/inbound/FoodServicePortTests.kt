@@ -8,7 +8,9 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
@@ -32,6 +34,23 @@ class FoodServicePortTests(
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(fixture)
+
+        verify(exactly = 1) { foodPersistencePort.createFood(createFoodDto) }
+    }
+
+    @Test
+    fun `should get all registered foods mapped to FoodDto`() {
+        val foodDtoFixture = listOf(
+                FoodDto(id = UUID.randomUUID(), name = "Pizza", calories = 1000),
+                FoodDto(id = UUID.randomUUID(), name = "Sushi", calories = 200)
+        )
+        every { foodPersistencePort.getFoods() } returns foodDtoFixture
+
+        val result = foodServicePort.getFoods()
+
+        assertEquals(foodDtoFixture, result)
+
+        verify(exactly = 1) { foodPersistencePort.getFoods() }
     }
 
 }

@@ -7,7 +7,9 @@ import com.example.infrastructure.entities.Food
 import com.example.infrastructure.entities.toFoodDto
 import com.example.infrastructure.repositories.FoodJpaRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class FoodPersistenceJpaAdapter(
@@ -19,4 +21,10 @@ class FoodPersistenceJpaAdapter(
         food = foodJpaRepository.save(food)
         return food.toFoodDto()
     }
+
+    override fun getFoods() =
+            foodJpaRepository.findAll().map { it.toFoodDto() }
+
+    override fun getFood(uuid: String) =
+            foodJpaRepository.findByIdOrNull(UUID.fromString(uuid))?.toFoodDto()
 }
