@@ -13,9 +13,11 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
 @ExtendWith(MockKExtension::class)
@@ -53,6 +55,28 @@ class FoodPersistenceAdapterTests(
         val result = foodPersistenceJpaAdapter.getFoods()
 
         assertEquals(2, result.size)
+    }
+
+    @Test
+    fun `should get a food by the uuid mapped to FoodDto`() {
+        val foodFixture = faker.randomProvider.randomClassInstance<Food>()
+
+        every { foodJpaRepository.findByIdOrNull(foodFixture.id) } returns foodFixture
+
+        val result = foodPersistenceJpaAdapter.getFood(foodFixture.id.toString())
+
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(foodFixture)
+    }
+
+    @Test
+    fun `should return null when getting a food by uuid`() {
+        every { foodJpaRepository.findByIdOrNull(any()) } returns null
+
+        val result = foodPersistenceJpaAdapter.getFood(UUID.randomUUID().toString())
+
+        assertNull(result)
     }
 
 }

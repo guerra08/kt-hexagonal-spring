@@ -12,6 +12,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -64,6 +65,15 @@ class FoodServicePortTests(
         val result = foodServicePort.getFood(foodDtoFixture.id.toString())
 
         assertEquals(foodDtoFixture, result)
+    }
+
+    @Test
+    fun `should return null when getting by uuid for non existing food`() {
+        every { foodPersistencePort.getFood(any()) } returns null
+
+        val result = foodServicePort.getFood(UUID.randomUUID().toString())
+
+        assertNull(result)
     }
 
 }
