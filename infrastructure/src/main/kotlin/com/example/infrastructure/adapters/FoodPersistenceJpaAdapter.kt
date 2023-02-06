@@ -21,6 +21,13 @@ class FoodPersistenceJpaAdapter(
         return foodJpaRepository.save(food).toFoodDto()
     }
 
+    override fun putFood(uuid: String, createFoodDto: CreateFoodDto): FoodDto? {
+        val uuidFromStr = UUID.fromString(uuid)
+        if(!foodJpaRepository.existsById(uuidFromStr)) return null
+        val foodToPut = Food.fromCreateFoodDto(createFoodDto, uuidFromStr)
+        return foodJpaRepository.save(foodToPut).toFoodDto()
+    }
+
     override fun getFoods() =
             foodJpaRepository.findAll().map { it.toFoodDto() }
 

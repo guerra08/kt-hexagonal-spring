@@ -15,8 +15,8 @@ class Food(
         @Column(name = "CALORIES") val calories: Int
 ) {
     companion object {
-        fun fromCreateFoodDto(createFoodDto: CreateFoodDto) =
-                Food(name = createFoodDto.name, calories = createFoodDto.calories)
+        fun fromCreateFoodDto(createFoodDto: CreateFoodDto, uuid: UUID? = null) =
+                Food(id = uuid, name = createFoodDto.name, calories = createFoodDto.calories)
     }
 }
 

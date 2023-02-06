@@ -12,6 +12,9 @@ class FoodService(
     override fun createFood(createFoodDto: CreateFoodDto) =
             foodPersistencePort.createFood(createFoodDto)
 
+    override fun putFood(uuid: String, createFoodDto: CreateFoodDto) =
+            foodPersistencePort.putFood(uuid, createFoodDto)
+
     override fun getFoods(): List<FoodDto> =
             foodPersistencePort.getFoods()
 

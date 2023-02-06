@@ -7,6 +7,8 @@ interface FoodPersistencePort {
 
     fun createFood(createFoodDto: CreateFoodDto): FoodDto
 
+    fun putFood(uuid: String, createFoodDto: CreateFoodDto): FoodDto?
+
     fun getFoods(): List<FoodDto>
 
     fun getFood(uuid: String): FoodDto?
